@@ -4,6 +4,7 @@ from fastapi import APIRouter
 from starlette.responses import JSONResponse
 
 from model.custom_request_object import CustomRequestObject
+from service.direct_invocation_service import DirectInvocationService
 from service.powershell_service import PowerShellService
 
 router = APIRouter()
@@ -22,7 +23,7 @@ def read_root(custom_request_object: CustomRequestObject):
 
 
 @router.get("/getGroup")
-def read_root() -> JSONResponse:
+def get_group() -> JSONResponse:
     return JSONResponse(
         content={
             "message": "Hello, World!",
@@ -31,7 +32,7 @@ def read_root() -> JSONResponse:
 
 
 @router.get("/dynamic/{path}")
-def read_root(path: str, custom_request_object: CustomRequestObject) -> JSONResponse:
+def dynamic_path(path: str, custom_request_object: CustomRequestObject) -> JSONResponse:
     custom_request_object.add_action(path)
     th = threading.Thread(target=PowerShellService.handle_dispatch, args=(custom_request_object,),
                           daemon=True)
@@ -43,3 +44,19 @@ def read_root(path: str, custom_request_object: CustomRequestObject) -> JSONResp
             "action": f"{custom_request_object.action}"
         },
         status_code=200)
+
+
+@router.get("/direct-invoke/{cmdlet}")
+def direct_invoke(cmdlet: str) -> JSONResponse:
+    """Invoke a PowerShell cmdlet asynchronously."""
+    direct_invocation = DirectInvocationService(cmdlet)
+
+    th = threading.Thread(target=direct_invocation.execute_cmdlet, daemon=True)
+    th.start()
+
+    return JSONResponse(
+        content={
+            "message": f"Your request is being handled! Cmdlet to be executed: {cmdlet}",
+        },
+        status_code=200
+    )

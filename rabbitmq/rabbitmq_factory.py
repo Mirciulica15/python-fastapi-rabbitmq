@@ -7,11 +7,10 @@ from rabbitmq.topicexchange.topic_exchange_rabbitmq_producer import TopicExchang
 
 
 class RabbitMQFactory:
-    """Factory to create a producer or consumer."""
+    """Factory to create RabbitMQ producers and consumers."""
 
     @staticmethod
     def get_producer(strategy_type: str, **kwargs) -> RabbitMQProducerInterface:
-        """Returns a producer instance based on the strategy type."""
         if strategy_type == "single_queue":
             return SingleQueueRabbitMQProducer(**kwargs)
         elif strategy_type == "topic_exchange":
@@ -21,7 +20,6 @@ class RabbitMQFactory:
 
     @staticmethod
     def get_consumer(strategy_type: str, **kwargs) -> RabbitMQConsumerInterface:
-        """Returns a consumer instance based on the strategy type."""
         if strategy_type == "single_queue":
             return SingleQueueRabbitMQConsumer(**kwargs)
         elif strategy_type == "topic_exchange":

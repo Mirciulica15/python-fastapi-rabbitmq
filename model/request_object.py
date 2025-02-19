@@ -2,6 +2,8 @@ from pydantic import BaseModel
 
 
 class RequestObject(BaseModel):
+    """Base class for request objects."""
+
     order_id: str
     action: str = None
 

@@ -38,6 +38,5 @@ class TopicExchangeRabbitMQConsumer(RabbitMQConsumerInterface):
         self.channel.start_consuming()
 
     def close(self):
-        """Close the RabbitMQ connection."""
         if self.connection:
             self.connection.close()

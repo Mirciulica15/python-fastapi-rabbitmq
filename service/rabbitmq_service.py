@@ -8,9 +8,8 @@ from rabbitmq.rabbitmq_producer_interface import RabbitMQProducerInterface
 
 
 class RabbitMQService:
-    """Service for configuring and managing RabbitMQ consumer and producer based on the strategy type."""
+    """Singleton Service for configuring and managing RabbitMQ consumer and producer based on the strategy type."""
 
-    # Class-level variable for the singleton instance
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -21,15 +20,14 @@ class RabbitMQService:
 
     def __init__(self):
         """Initialize the RabbitMQService instance."""
-        if not hasattr(self, '_initialized'):  # Check if already initialized
+        if not hasattr(self, '_initialized'):
             self._rabbitmq_producer: RabbitMQProducerInterface = None
             self._rabbitmq_consumer = None
             load_dotenv()
-            self._initialized = True  # Set initialized flag to True to avoid re-initialization
+            self._initialized = True
 
     @staticmethod
     def get_strategy_type():
-        """Get the strategy type from environment variable."""
         return os.getenv("STRATEGY_TYPE", "single_queue").strip().lower()
 
     def start_rabbitmq_service(self):
@@ -69,12 +67,11 @@ class RabbitMQService:
             return {"exchange_name": exchange_name, "bank_id": bank_id, "user_id": user_id}
 
     def get_producer(self):
-        """Return the appropriate producer based on the strategy type."""
         return self._rabbitmq_producer
 
     @classmethod
     def get_instance(cls):
         """Returns the singleton instance of RabbitMQService."""
         if cls._instance is None:
-            cls._instance = RabbitMQService()  # Create the instance if it doesn't exist
+            cls._instance = RabbitMQService()
         return cls._instance

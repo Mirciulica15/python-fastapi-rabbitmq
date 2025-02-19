@@ -6,7 +6,7 @@ class RabbitMQProducerInterface(ABC):
 
     @abstractmethod
     def publish(self, message: str, bank_id: str, user_id: str):
-        """Send a message to RabbitMQ with optional bank_id and user_id for topic exchange."""
+        """Send a message to RabbitMQ with bank_id and user_id."""
         pass
 
     @abstractmethod

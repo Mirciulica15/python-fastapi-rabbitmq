@@ -8,7 +8,7 @@ from service.rabbitmq_service import RabbitMQService
 
 
 class PowerShellService:
-    """Service for handling dispatching and publishing messages to RabbitMQ."""
+    """Service for simulating dispatching requests to PowerShell and publishing responses to RabbitMQ."""
 
     def __init__(self):
         pass

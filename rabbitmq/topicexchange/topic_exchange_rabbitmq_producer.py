@@ -12,7 +12,6 @@ class TopicExchangeRabbitMQProducer(RabbitMQProducerInterface):
         self.connect()
 
     def connect(self):
-        """Establish a RabbitMQ connection and declare a topic exchange."""
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(self.host))
         self.channel = self.connection.channel()
         self.channel.exchange_declare(exchange=self.exchange_name, exchange_type="topic")
@@ -27,6 +26,5 @@ class TopicExchangeRabbitMQProducer(RabbitMQProducerInterface):
         )
 
     def close(self):
-        """Close the RabbitMQ connection."""
         if self.connection:
             self.connection.close()

@@ -4,21 +4,10 @@ from fastapi import FastAPI
 from starlette.responses import JSONResponse
 
 from model.custom_request_object import CustomRequestObject
-from rabbitmq.rabbitmq_consumer import RabbitMQConsumer
-from rabbitmq.rabbitmq_producer import RabbitMQProducer
 from service.powershell_service import handle_dispatch
+from service.rabbitmq_service import RabbitMQService
 
-rabbitmq_producer: RabbitMQProducer = RabbitMQProducer(queue_name="demo_queue", host="localhost")
-rabbitmq_consumer: RabbitMQConsumer = RabbitMQConsumer(queue_name="demo_queue", host="localhost")
 app = FastAPI()
-
-
-def start_rabbitmq_consumer():
-    rabbitmq_consumer.start_consuming()
-
-
-thread = threading.Thread(target=start_rabbitmq_consumer, daemon=True)
-thread.start()
 
 
 @app.get("/")
@@ -42,6 +31,8 @@ def read_root() -> JSONResponse:
 
 
 if __name__ == "__main__":
+    rabbitmq_service = RabbitMQService.get_instance()
+    rabbitmq_service.start_rabbitmq_service()
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=8000)

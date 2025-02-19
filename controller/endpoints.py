@@ -4,14 +4,15 @@ from fastapi import APIRouter
 from starlette.responses import JSONResponse
 
 from model.custom_request_object import CustomRequestObject
-from service.powershell_service import handle_dispatch
+from service.powershell_service import PowerShellService
 
 router = APIRouter()
 
 
 @router.get("/")
 def read_root(custom_request_object: CustomRequestObject):
-    th = threading.Thread(target=handle_dispatch, args=(custom_request_object, "getGroup"), daemon=True)
+    th = threading.Thread(target=PowerShellService.handle_dispatch, args=(custom_request_object, "getGroup"),
+                          daemon=True)
     th.start()
     return JSONResponse(
         content={

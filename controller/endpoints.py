@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.get("/")
 def read_root(custom_request_object: CustomRequestObject):
-    th = threading.Thread(target=PowerShellService.handle_dispatch, args=(custom_request_object, "getGroup"),
+    th = threading.Thread(target=PowerShellService.handle_dispatch, args=(custom_request_object,),
                           daemon=True)
     th.start()
     return JSONResponse(
@@ -21,7 +21,7 @@ def read_root(custom_request_object: CustomRequestObject):
         status_code=200)
 
 
-@router.get("/test")
+@router.get("/getGroup")
 def read_root() -> JSONResponse:
     return JSONResponse(
         content={
@@ -33,7 +33,7 @@ def read_root() -> JSONResponse:
 @router.get("/dynamic/{path}")
 def read_root(path: str, custom_request_object: CustomRequestObject) -> JSONResponse:
     custom_request_object.add_action(path)
-    th = threading.Thread(target=PowerShellService.handle_dispatch, args=(custom_request_object, path),
+    th = threading.Thread(target=PowerShellService.handle_dispatch, args=(custom_request_object,),
                           daemon=True)
     th.start()
     return JSONResponse(

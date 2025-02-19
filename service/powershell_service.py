@@ -14,15 +14,13 @@ class PowerShellService:
         pass
 
     @staticmethod
-    def handle_dispatch(request_object: RequestObject, action: str) -> None:
+    def handle_dispatch(request_object: RequestObject) -> None:
         """Handles the dispatching of requests and publishing the result to RabbitMQ."""
         print("Handle dispatch thread started!", datetime.now(timezone.utc))
         bank_id = "8813"
         user_id = "mircea"
 
-        request_object.add_action(action)
-
-        response = requests.get(url="http://localhost:8000/test")
+        response = requests.get(url=f"http://localhost:8000/{request_object.action}")
 
         message_str = (
                 str(response.status_code) + " " +

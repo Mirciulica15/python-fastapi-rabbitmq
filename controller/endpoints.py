@@ -28,3 +28,18 @@ def read_root() -> JSONResponse:
             "message": "Hello, World!",
         },
         status_code=200)
+
+
+@router.get("/dynamic/{path}")
+def read_root(path: str, custom_request_object: CustomRequestObject) -> JSONResponse:
+    custom_request_object.add_action(path)
+    th = threading.Thread(target=PowerShellService.handle_dispatch, args=(custom_request_object, path),
+                          daemon=True)
+    th.start()
+    return JSONResponse(
+        content={
+            "message": f"Your request is being handled! This is the {path} path",
+            "order_id": f"{custom_request_object.order_id}",
+            "action": f"{custom_request_object.action}"
+        },
+        status_code=200)

@@ -22,7 +22,7 @@ class PowerShellService:
 
         response = requests.get(url=f"http://localhost:8000/{request_object.action}")
 
-        message_str = (
+        message: str = (
                 str(response.status_code) + " " +
                 json.dumps(response.json()) +
                 " at time " +
@@ -33,10 +33,10 @@ class PowerShellService:
                 user_id
         )
 
-        print("Producer published response to Rabbit MQ: ", message_str)
+        print("Producer published response to Rabbit MQ: ", message)
 
         RabbitMQService.get_instance().get_producer().publish(
-            message=message_str,
+            message=message,
             bank_id=bank_id,
             user_id=user_id
         )

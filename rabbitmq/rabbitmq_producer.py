@@ -1,5 +1,3 @@
-import json
-
 import pika
 
 
@@ -11,9 +9,8 @@ class RabbitMQProducer:
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=queue_name)
 
-    def publish(self, message: dict):
-        message_str = json.dumps(message)
-        self.channel.basic_publish(exchange="", routing_key=self.queue_name, body=message_str.encode('utf-8'))
+    def publish(self, message: str):
+        self.channel.basic_publish(exchange="", routing_key=self.queue_name, body=message.encode('utf-8'))
 
     def close(self):
         self.connection.close()

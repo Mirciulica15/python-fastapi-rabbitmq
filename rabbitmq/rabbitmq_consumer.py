@@ -9,8 +9,9 @@ class RabbitMQConsumer:
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=queue_name)
 
-    def on_message(self, channel, method, properties, body):
-        print(f"Consumer received event: {body.decode()}")
+    @staticmethod
+    def on_message(_, __, ___, body):
+        print(f"Consumer received response from Rabbit MQ: {body.decode()}")
 
     def start_consuming(self):
         self.channel.basic_consume(queue=self.queue_name, on_message_callback=self.on_message, auto_ack=True)

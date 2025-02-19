@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timezone
 
 import requests
@@ -14,10 +15,16 @@ def handle_dispatch(request_object: RequestObject, action: str) -> None:
     )
 
     print(
-        "Producer publishes the response to Rabbit MQ: ",
+        "Producer published response to Rabbit MQ: ",
         response.status_code,
         response.json(),
-        " at time: ",
+        "at time",
         datetime.now(timezone.utc)
     )
-    rabbitmq_producer.publish(message=response.json())
+    message_str = (
+            str(response.status_code) + " " +
+            json.dumps(response.json()) +
+            " at time " +
+            str(datetime.now(timezone.utc))
+    )
+    rabbitmq_producer.publish(message=message_str)
